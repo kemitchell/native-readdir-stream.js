@@ -1,0 +1,22 @@
+{
+  "name": "native-readdir-stream",
+  "version": "0.0.0",
+  "description": "readable-stream REadable for native readdir(3)",
+  "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
+  "repository": "kemitchell/native-readdir-stream.js",
+  "files": [
+    "index.js"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "readable-stream": "^2.1.5"
+  },
+  "devDependencies": {
+    "defence-cli": "^2.0.1",
+    "native-readdir": "github:kemitchell/native-readdir.js",
+    "replace-require-self": "^1.1.1"
+  },
+  "scripts": {
+    "test": "defence README.md | replace-require-self | node"
+  }
+}
