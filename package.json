@@ -1,6 +1,6 @@
 {
   "name": "native-readdir-stream",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "readable-stream for native readdir(3)",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
   "repository": "kemitchell/native-readdir-stream.js",
