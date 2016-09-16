@@ -1,17 +1,17 @@
-var Directory = require('native-readdir')
+var NativeStream = require('native-readdir')
 var Readable = require('readable-stream').Readable
 var inherits = require('util').inherits
 
-module.exports = ReaddirStream
+module.exports = NativeReaddirStream
 
-function ReaddirStream (path) {
-  if (!(this instanceof ReaddirStream)) {
-    return new ReaddirStream(path)
+function NativeReaddirStream (path) {
+  if (!(this instanceof NativeReaddirStream)) {
+    return new NativeReaddirStream(path)
   }
 
   var self = this
-  self._directory = new Directory(path)
-  self._directory.open(function (error) {
+  self._nativeStream = new NativeStream(path)
+  self._nativeStream.open(function (error) {
     if (error) {
       self.emit('error', error)
     } else {
@@ -25,42 +25,39 @@ function ReaddirStream (path) {
   })
 }
 
-inherits(ReaddirStream, Readable)
+inherits(NativeReaddirStream, Readable)
 
-ReaddirStream.prototype._read = function () {
+NativeReaddirStream.prototype._read = function () {
   var self = this
-  if (self.opened) {
-    self._readEntries()
+  if (self._opened) {
+    self._readEntry()
   } else {
     self.once('opened', function () {
-      self._readEntries()
+      self._readEntry()
     })
   }
 }
 
-ReaddirStream.prototype._readEntries = function () {
+NativeReaddirStream.prototype._readEntry = function () {
   var self = this
-  self._directory.read(function (error, entry) {
+  self._nativeStream.read(function (error, entry) {
     if (error) {
       self.emit('error', error)
-      self._close()
+      self._closeNativeStream()
     } else {
       if (entry === null) {
         self.push(null)
-        self._close()
+        self._closeNativeStream()
       } else {
-        var keepPushing = self.push(entry)
-        if (keepPushing) {
-          self._readEntries() // Recurse.
-        }
+        self.push(entry)
       }
     }
   })
 }
 
-ReaddirStream.prototype._close = function () {
+NativeReaddirStream.prototype._closeNativeStream = function () {
   var self = this
-  self._directory.close(function (error) {
+  self._nativeStream.close(function (error) {
     if (error) {
       self.emit('error', error)
     }
