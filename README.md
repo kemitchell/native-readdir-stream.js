@@ -22,4 +22,7 @@ new Reader(directory)
 .once('end', function () {
   assert.deepEqual(entries.sort(), ['.', '..', 'a', 'b'])
 })
+.once('error', function (error) {
+  assert.ifError(error)
+})
 ```
